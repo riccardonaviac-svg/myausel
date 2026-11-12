@@ -28,20 +28,24 @@ for (let offset = 0; ; offset += 50) {
   if (offset + 50 >= page.paging.total) break;
 }
 
-const productos = [];
+// Un producto en catálogo tiene 2 publicaciones (la original y la de catálogo): nos quedamos con la de catálogo.
+const items = [];
 for (let i = 0; i < ids.length; i += 20) {
-  const batch = await get(`/items?ids=${ids.slice(i, i + 20).join(",")}&attributes=title,price,original_price,permalink,pictures`, tok.access_token);
+  const batch = await get(`/items?ids=${ids.slice(i, i + 20).join(",")}&attributes=title,price,original_price,permalink,pictures,catalog_product_id,catalog_listing`, tok.access_token);
   for (const { code, body: it } of batch) {
-    if (code !== 200) continue;
-    productos.push({
-      nombre: it.title,
-      precio: it.price,
-      precio_antes: it.original_price,
-      img: it.pictures?.[0]?.secure_url || "",
-      ml: it.permalink,
-    });
+    if (code === 200) items.push(it);
   }
 }
+const enCatalogo = new Set(items.filter(it => it.catalog_listing).map(it => it.catalog_product_id));
+const productos = items
+  .filter(it => it.catalog_listing || !enCatalogo.has(it.catalog_product_id))
+  .map(it => ({
+    nombre: it.title,
+    precio: it.price,
+    precio_antes: it.original_price,
+    img: it.pictures?.[0]?.secure_url || "",
+    ml: it.permalink,
+  }));
 
 // ponytail: si la API devuelve 0 por un error raro, no vaciamos la tienda.
 if (!productos.length) throw new Error("0 productos activos, no se actualiza products.json");
