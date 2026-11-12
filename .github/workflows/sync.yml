@@ -1,9 +1,11 @@
 name: Sincronizar Mercado Libre
 on:
   schedule:
-    - cron: "17 * * * *" # cada hora
+    - cron: "*/15 * * * *" # cada 15 minutos
   workflow_dispatch:
 
+# Nunca dos a la vez: cada corrida gasta el refresh token de Mercado Libre.
+concurrency: sync
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -19,6 +21,8 @@ jobs:
           ML_CLIENT_ID: ${{ secrets.ML_CLIENT_ID }}
           ML_CLIENT_SECRET: ${{ secrets.ML_CLIENT_SECRET }}
           ML_REFRESH_TOKEN: ${{ secrets.ML_REFRESH_TOKEN }}
+          SMTP_USER: r.navia@myausel.com
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
       - name: Guardar refresh token nuevo
         if: always() && hashFiles('.new_refresh_token') != ''
         run: gh secret set ML_REFRESH_TOKEN < .new_refresh_token && rm .new_refresh_token
@@ -26,8 +30,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
       - name: Publicar cambios
         run: |
-          git diff --quiet products.json && exit 0
+          git add products.json .preguntas-avisadas 2>/dev/null || git add products.json
+          git diff --cached --quiet && exit 0
           git config user.name "ausel-bot"
           git config user.email "ausel-bot@users.noreply.github.com"
-          git commit -am "Actualizar productos desde Mercado Libre"
+          git commit -m "Actualizar productos desde Mercado Libre"
           git push
