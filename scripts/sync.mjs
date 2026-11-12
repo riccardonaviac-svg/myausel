@@ -51,7 +51,8 @@ const productos = items
 // Preguntas sin responder -> correo privado a ti (no se publican en ningún lado).
 // .preguntas-avisadas guarda solo los números de las preguntas ya avisadas, para no repetir.
 const { SMTP_USER, SMTP_PASS } = process.env;
-if (SMTP_PASS) {
+// Si falla (p. ej. falta el permiso de preguntas en la app de ML), avisa en el log pero no frena la tienda.
+if (SMTP_PASS) try {
   const F = ".preguntas-avisadas";
   const { questions } = await get(`/questions/search?seller_id=${userId}&status=UNANSWERED&api_version=4&limit=50`, tok.access_token);
   const avisadas = existsSync(F) ? readFileSync(F, "utf8").split("\n") : [];
@@ -68,6 +69,8 @@ if (SMTP_PASS) {
   }
   writeFileSync(F, questions.map(q => q.id).join("\n") + "\n");
   console.log(`${questions.length} preguntas sin responder, ${nuevas.length} avisadas ahora`);
+} catch (e) {
+  console.log("::warning::Aviso de preguntas falló: " + e.message);
 }
 
 // ponytail: si la API devuelve 0 por un error raro, no vaciamos la tienda.
