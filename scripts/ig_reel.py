@@ -1,8 +1,9 @@
 # Genera un reel vertical 1080x1920 (MP4) con los productos de products.json, con la marca Ausel.
 # Uso: python scripts/ig_reel.py <carpeta_salida> "<gancho línea 1>" "<gancho línea 2>"
-# Requiere Pillow y ffmpeg (en Linux: apt install ffmpeg; en Windows: pip install imageio-ffmpeg).
+# Requiere Pillow, numpy y ffmpeg (en Linux: apt install ffmpeg python3-numpy; en Windows: pip install imageio-ffmpeg).
 import io, json, os, subprocess, sys, urllib.request
 import shutil
+from musica import pista
 from PIL import Image, ImageDraw, ImageFont
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -87,14 +88,17 @@ def end_frame(t):
 
 escenas = [(hook_frame, 2.0)] + [((lambda i: lambda t: product_frame(i, t))(i), 2.6) for i in range(len(productos))] + [(end_frame, 3.0)]
 mp4 = os.path.join(OUT, "reel.mp4")
+# Música original generada para este reel (sin derechos de autor); la semilla cambia el tema cada vez.
+wav = os.path.join(OUT, "musica.wav")
+duracion = sum(d for _, d in escenas)
+pista(duracion + .5, wav, semilla=int.from_bytes(os.urandom(2), "big"))
 ff = shutil.which("ffmpeg")
 if not ff:
     import imageio_ffmpeg
     ff = imageio_ffmpeg.get_ffmpeg_exe()
 proc = subprocess.Popen([ff, "-y", "-loglevel", "error",
     "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-    "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
-    "-shortest", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "high", "-preset", "medium", "-crf", "20",
+    "-i", wav, "-shortest", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "high", "-preset", "medium", "-crf", "20",
     "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", mp4], stdin=subprocess.PIPE)
 for escena, dur in escenas:
     n = int(dur * FPS)
@@ -103,4 +107,5 @@ for escena, dur in escenas:
 proc.stdin.close(); proc.wait()
 end_frame(1).save(os.path.join(OUT, "portada.jpg"), quality=92)
 product_frame(0, .6).convert("RGB").save(os.path.join(OUT, "preview.jpg"), quality=85)
+os.remove(wav)
 print("ok", mp4, round(os.path.getsize(mp4) / 1e6, 1), "MB")
