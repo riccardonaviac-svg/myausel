@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUSEL · Tienda</title>
+<meta name="description" content="AUSEL SpA: tecnología, cuidado personal y gadgets con envío a todo Chile.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0e0f12; --card:#17191e; --line:#262931; --fg:#f2f3f5; --mute:#9aa0aa; --accent:#c6ff3d; }
+  * { box-sizing:border-box; margin:0 }
+  body { background:var(--bg); color:var(--fg); font-family:'Space Grotesk',system-ui,sans-serif; line-height:1.4 }
+  a { color:inherit }
+  .wrap { max-width:1100px; margin:auto; padding:0 16px }
+  header { display:flex; justify-content:space-between; align-items:center; padding:20px 0 }
+  .logo { font-weight:700; font-size:1.4rem; letter-spacing:.08em }
+  .logo span { color:var(--accent) }
+  .btn { display:inline-block; background:var(--accent); color:#000; font-weight:600; padding:12px 20px; border-radius:999px; text-decoration:none }
+  .btn.ghost { background:none; color:var(--fg); border:1px solid var(--line) }
+  .hero { padding:64px 0 48px }
+  .hero h1 { font-size:clamp(2.2rem,6vw,4rem); line-height:1.05; max-width:14ch }
+  .hero h1 em { font-style:normal; color:var(--accent) }
+  .hero p { color:var(--mute); margin:16px 0 28px; max-width:46ch; font-size:1.1rem }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; padding-bottom:64px }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; display:flex; flex-direction:column }
+  .pic { aspect-ratio:1; display:grid; place-items:center; font-size:5rem; background:radial-gradient(circle at 30% 20%,#2a2e38,#14161a) }
+  .pic img { width:100%; height:100%; object-fit:cover }
+  .body { padding:16px; display:flex; flex-direction:column; gap:8px; flex:1 }
+  .tag { font-size:.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:.06em }
+  .price { font-size:1.6rem; font-weight:700; margin-top:auto }
+  .cuotas { color:var(--mute); font-size:.85rem }
+  .card .btn { text-align:center; margin-top:8px }
+  .perks { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; padding:32px 0 64px; border-top:1px solid var(--line) }
+  .perks b { display:block; margin-bottom:4px }
+  .perks p { color:var(--mute); font-size:.95rem }
+  footer { border-top:1px solid var(--line); padding:24px 0; color:var(--mute); font-size:.85rem }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">AUSEL<span>.</span></div>
+    <a class="btn ghost" href="#productos">Ver productos</a>
+  </header>
+
+  <section class="hero">
+    <h1>Gadgets buenos, <em>precios justos.</em></h1>
+    <p>Tecnología, audio y cuidado personal con despacho a todo Chile. Compra segura por Mercado Libre o escríbenos directo.</p>
+    <a class="btn" href="#productos">Comprar ahora</a>
+  </section>
+
+  <section id="productos" class="grid"></section>
+
+  <section class="perks">
+    <div><b>Compra protegida</b><p>Todos los productos se venden también vía Mercado Libre.</p></div>
+    <div><b>6 cuotas sin interés</b><p>Paga en cuotas con tu tarjeta.</p></div>
+    <div><b>Envío a todo Chile</b><p>Despacho rápido desde nuestra bodega.</p></div>
+  </section>
+
+  <footer>© <span id="y"></span> AUSEL SpA · myausel.com</footer>
+</div>
+
+<script>
+// EDITA AQUÍ: tu WhatsApp (sin +) y los links a cada publicación de Mercado Libre.
+const WHATSAPP = "56900000000";
+const productos = [
+  { nombre:"Irrigador Bucal Portátil Inalámbrico con 4 Boquillas", cat:"Cuidado personal", precio:21990, emoji:"🦷", img:"", ml:"https://www.mercadolibre.cl/irrigador-bucal-portatil-inalambrico-verde-para-limpieza-dental-con-4-boquillas/p/MLC44721825?pdp_filters=seller_id%3A3535240353" },
+  { nombre:"Kit Teclado y Ratón Gamer Yelandar KT368 LED", cat:"Computación", precio:16990, emoji:"🖱️", img:"", ml:"https://www.mercadolibre.cl/kit-teclado-y-raton-gamer-yelandar-kt368-led-en-portugues-negro/p/MLC24783937?pdp_filters=seller_id%3A3535240353" },
+  { nombre:"Micrófono Condensador con Trípode y Filtro Anti Pop", cat:"Audio", precio:15990, emoji:"🎙️", img:"", ml:"https://www.mercadolibre.cl/microfono-condensador-con-tripode-y-filtro-anti-pop-soporte/p/MLC38901887?pdp_filters=seller_id%3A3535240353" },
+  { nombre:"M11 Ventilador Inalámbrico de Mano Alta Velocidad", cat:"Electrodomésticos", precio:13990, emoji:"🌀", img:"", ml:"https://www.mercadolibre.cl/m11-ventilador-inalambrico-de-mano-blanco-alta-vel/up/MLCU4333211434?pdp_filters=seller_id%3A3535240353" },
+];
+
+const clp = n => "$" + n.toLocaleString("es-CL");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.getElementById("productos").innerHTML = productos.map(p => {
+  const wa = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Hola! Me interesa: " + p.nombre)}`;
+  return `<article class="card">
+    <div class="pic">${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.nombre)}" loading="lazy">` : p.emoji}</div>
+    <div class="body">
+      <span class="tag">${esc(p.cat)}</span>
+      <h3>${esc(p.nombre)}</h3>
+      <div class="price">${clp(p.precio)}</div>
+      <div class="cuotas">6 cuotas de ${clp(Math.round(p.precio / 6))} sin interés</div>
+      <a class="btn" href="${esc(p.ml || wa)}" target="_blank" rel="noopener">${p.ml ? "Comprar en Mercado Libre" : "Pedir por WhatsApp"}</a>
+    </div>
+  </article>`;
+}).join("");
+document.getElementById("y").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
