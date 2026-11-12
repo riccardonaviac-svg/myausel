@@ -43,5 +43,5 @@ El dueño de la cuenta (Riccardo, r.navia@myausel.com) pidió por escrito el 12-
 - Si Composio, Instagram o Facebook fallan, reintenta una vez; si sigue fallando, deja todo listo en el repo y explica el error en simple en el resumen.
 
 ## Herramientas
-- Composio está conectado como servidor MCP `composio` (herramientas mcp__composio__*). Si no aparecen, explica el error y termina.
+- Composio está conectado como conector de claude.ai (herramientas mcp__claude_ai_Composio__*). Si no aparecen, explica el error y termina.
 - Las imágenes se generan con Python + Pillow usando las fuentes de `fonts/` (ver `scripts/ig_post.py`).
