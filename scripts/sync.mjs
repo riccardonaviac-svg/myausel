@@ -30,12 +30,10 @@ for (let offset = 0; ; offset += 50) {
 }
 
 // Un producto en catálogo tiene 2 publicaciones (la original y la de catálogo): nos quedamos con la de catálogo.
+// De a uno: ML deprecó la consulta múltiple /items?ids= para apps nuevas.
 const items = [];
-for (let i = 0; i < ids.length; i += 20) {
-  const batch = await get(`/items?ids=${ids.slice(i, i + 20).join(",")}&attributes=id,title,price,original_price,permalink,pictures,catalog_product_id,catalog_listing,category_id`, tok.access_token);
-  for (const { code, body: it } of batch) {
-    if (code === 200) items.push(it);
-  }
+for (const id of ids) {
+  items.push(await get(`/items/${id}?attributes=id,title,price,original_price,permalink,pictures,catalog_product_id,catalog_listing,category_id`, tok.access_token));
 }
 const enCatalogo = new Set(items.filter(it => it.catalog_listing).map(it => it.catalog_product_id));
 const visibles = items.filter(it => it.catalog_listing || !enCatalogo.has(it.catalog_product_id));
