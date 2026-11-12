@@ -1,16 +1,19 @@
 [
  {
-  "nombre": "Irrigador Bucal Portátil Inalámbrico Verde Para Limpieza Dental Con 4 Boquillas",
-  "precio": 21990,
-  "precio_antes": null,
-  "img": "https://http2.mlstatic.com/D_665212-MLU70646177655_072023-O.jpg",
-  "ml": "https://articulo.mercadolibre.cl/MLC-4555523760-irrigador-bucal-portatil-inalambrico-verde-para-limpieza-dental-con-4-boquillas-_JM"
- },
- {
   "nombre": "Micrófono Condensador Con Trípode Y Filtro Anti Pop Soporte Negro",
   "precio": 15990,
   "precio_antes": null,
   "img": "https://http2.mlstatic.com/D_748733-MLA114826546260_082026-O.jpg",
+  "fotos": [
+   "https://http2.mlstatic.com/D_748733-MLA114826546260_082026-O.jpg",
+   "https://http2.mlstatic.com/D_879483-MLA116199387119_082026-O.webp",
+   "https://http2.mlstatic.com/D_910315-MLA116199328663_082026-O.jpg",
+   "https://http2.mlstatic.com/D_857900-MLU77927799534_082024-O.webp",
+   "https://http2.mlstatic.com/D_783893-MLU78151135739_082024-O.webp",
+   "https://http2.mlstatic.com/D_980425-MLU77927799542_082024-O.webp"
+  ],
+  "categoria": "Micrófonos",
+  "descripcion": "Micrófono de condensador ideal para realizar podcasts, actividades de locución, grabar canciones y más.\n\n- 100% de alta calidad.\n- Adecuado para micrófonos de diámetro entre 25 MM y 40 MM.\n- Construcción ligera y duradera.\n- Diseño desmontable para un almacenamiento conveniente y fácil transporte.\n- Ajustable hacia arriba y hacia abajo para configurar ángulos adecuados.\n- Trípode de metal plegable con patas montadas con almohadillas de goma para mantener el equipo seguro y estable.\n\nEl filtro Pop está fabricado con materiales filtrantes de red de nailon doble de alta calidad, mejora el sonido de las grabaciones vocales y previene estallidos.\n\nCaracterísticas:\n- Kit de micrófono de mesa que incluye mini micrófono, trípode, soporte de choque, parabrisas y cable adaptador.\n- Reducción de ruido: filtro pop de 10 cm y montaje de choque para minimizar el ruido de fondo. El micrófono cardioide ",
   "ml": "https://articulo.mercadolibre.cl/MLC-4188274784-microfono-condensador-con-tripode-y-filtro-anti-pop-soporte-negro-_JM"
  },
  {
@@ -18,6 +21,12 @@
   "precio": 16990,
   "precio_antes": null,
   "img": "https://http2.mlstatic.com/D_612177-MLU70655142179_072023-O.jpg",
+  "fotos": [
+   "https://http2.mlstatic.com/D_612177-MLU70655142179_072023-O.jpg",
+   "https://http2.mlstatic.com/D_774890-MLA117562426381_092026-O.jpg"
+  ],
+  "categoria": "Kits de Mouse y Teclado",
+  "descripcion": "Con este kit de teclado y ratón de Yelandar puedes llevar tus juegos al siguiente nivel. Dirigido a un público gamer, aumenta tu rendimiento en diferentes juegos. Con este combo, podrás utilizar estos dispositivos de forma intensiva y disfrutar de un sinfín de horas de diversión.",
   "ml": "https://articulo.mercadolibre.cl/MLC-4188210604-kit-teclado-y-raton-gamer-yelandar-kt368-led-en-portugues-negro-_JM"
  },
  {
@@ -25,6 +34,30 @@
   "precio": 13990,
   "precio_antes": null,
   "img": "https://http2.mlstatic.com/D_642377-MLA114594537013_072026-O.webp",
+  "fotos": [
+   "https://http2.mlstatic.com/D_642377-MLA114594537013_072026-O.webp",
+   "https://http2.mlstatic.com/D_650762-MLA114594508113_072026-O.webp",
+   "https://http2.mlstatic.com/D_825598-MLA113346042050_072026-O.webp"
+  ],
+  "categoria": "Ventiladores Portátiles",
+  "descripcion": "El ventilador portátil de mano destaca por su extraordinario diseño tecnológico y su gran potencia en un tamaño ultra compacto. Equipado con un motor de turbina de alta velocidad, este dispositivo permite un control absoluto del flujo de aire gracias a su sistema de regulación ultra preciso de 120 niveles de velocidad. Su color blanco minimalista y su aspecto moderno lo convierten en el accesorio ideal para refrescarse de manera eficiente en cualquier momento y lugar.\n\nCARACTERÍSTICAS PRINCIPALES\n120 Niveles de Velocidad: Cuenta con un sistema de control de ajuste progresivo que permite transicionar de manera fluida desde una brisa suave hasta un potente flujo de aire turbo, adaptándose con precisión a cualquier necesidad térmica.\nPantalla Digital LED: Incorpora un indicador numérico brillante en el mango que muestra el nivel de velocidad seleccionado en tiempo real, facilitando un contr",
   "ml": "https://articulo.mercadolibre.cl/MLC-4188424228-m11-ventilador-inalambrico-de-mano-blanco-alta-vel-beige-_JM"
+ },
+ {
+  "nombre": "Irrigador Bucal Portátil Inalámbrico Verde Para Limpieza Dental Con 4 Boquillas",
+  "precio": 21990,
+  "precio_antes": null,
+  "img": "https://http2.mlstatic.com/D_665212-MLU70646177655_072023-O.jpg",
+  "fotos": [
+   "https://http2.mlstatic.com/D_665212-MLU70646177655_072023-O.jpg",
+   "https://http2.mlstatic.com/D_915792-MLU70646177657_072023-O.jpg",
+   "https://http2.mlstatic.com/D_889504-MLU70646177659_072023-O.jpg",
+   "https://http2.mlstatic.com/D_850849-MLU70646485073_072023-O.jpg",
+   "https://http2.mlstatic.com/D_870567-MLU74440520618_022024-O.webp",
+   "https://http2.mlstatic.com/D_786538-MLU72847856717_112023-O.webp"
+  ],
+  "categoria": "Irrigadores Bucales",
+  "descripcion": "",
+  "ml": "https://articulo.mercadolibre.cl/MLC-4555523760-irrigador-bucal-portatil-inalambrico-verde-para-limpieza-dental-con-4-boquillas-_JM"
  }
 ]
