@@ -23,8 +23,8 @@
   .hero p { color:var(--mute); margin:16px 0 28px; max-width:46ch; font-size:1.1rem }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; padding-bottom:64px }
   .card { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; display:flex; flex-direction:column }
-  .pic { aspect-ratio:1; display:grid; place-items:center; font-size:5rem; background:radial-gradient(circle at 30% 20%,#2a2e38,#14161a) }
-  .pic img { width:100%; height:100%; object-fit:cover }
+  .pic { aspect-ratio:1; display:grid; place-items:center; font-size:5rem; background:#fff }
+  .pic img { width:100%; height:100%; object-fit:contain }
   .body { padding:16px; display:flex; flex-direction:column; gap:8px; flex:1 }
   .tag { font-size:.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:.06em }
   .price { font-size:1.6rem; font-weight:700; margin-top:auto }
@@ -61,30 +61,20 @@
 </div>
 
 <script>
-// EDITA AQUÍ: tu WhatsApp (sin +) y los links a cada publicación de Mercado Libre.
-const WHATSAPP = "56900000000";
-const productos = [
-  { nombre:"Irrigador Bucal Portátil Inalámbrico con 4 Boquillas", cat:"Cuidado personal", precio:21990, emoji:"🦷", img:"", ml:"https://www.mercadolibre.cl/irrigador-bucal-portatil-inalambrico-verde-para-limpieza-dental-con-4-boquillas/p/MLC44721825?pdp_filters=seller_id%3A3535240353" },
-  { nombre:"Kit Teclado y Ratón Gamer Yelandar KT368 LED", cat:"Computación", precio:16990, emoji:"🖱️", img:"", ml:"https://www.mercadolibre.cl/kit-teclado-y-raton-gamer-yelandar-kt368-led-en-portugues-negro/p/MLC24783937?pdp_filters=seller_id%3A3535240353" },
-  { nombre:"Micrófono Condensador con Trípode y Filtro Anti Pop", cat:"Audio", precio:15990, emoji:"🎙️", img:"", ml:"https://www.mercadolibre.cl/microfono-condensador-con-tripode-y-filtro-anti-pop-soporte/p/MLC38901887?pdp_filters=seller_id%3A3535240353" },
-  { nombre:"M11 Ventilador Inalámbrico de Mano Alta Velocidad", cat:"Electrodomésticos", precio:13990, emoji:"🌀", img:"", ml:"https://www.mercadolibre.cl/m11-ventilador-inalambrico-de-mano-blanco-alta-vel/up/MLCU4333211434?pdp_filters=seller_id%3A3535240353" },
-];
-
-const clp = n => "$" + n.toLocaleString("es-CL");
-const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-document.getElementById("productos").innerHTML = productos.map(p => {
-  const wa = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Hola! Me interesa: " + p.nombre)}`;
-  return `<article class="card">
-    <div class="pic">${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.nombre)}" loading="lazy">` : p.emoji}</div>
+// Los productos vienen de products.json, que se actualiza solo desde Mercado Libre (ver scripts/sync.mjs).
+const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+fetch("products.json", { cache: "no-store" }).then(r => r.json()).then(productos => {
+  document.getElementById("productos").innerHTML = productos.map(p => `<article class="card">
+    <div class="pic">${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.nombre)}" loading="lazy">` : "📦"}</div>
     <div class="body">
-      <span class="tag">${esc(p.cat)}</span>
       <h3>${esc(p.nombre)}</h3>
-      <div class="price">${clp(p.precio)}</div>
-      <div class="cuotas">6 cuotas de ${clp(Math.round(p.precio / 6))} sin interés</div>
-      <a class="btn" href="${esc(p.ml || wa)}" target="_blank" rel="noopener">${p.ml ? "Comprar en Mercado Libre" : "Pedir por WhatsApp"}</a>
+      <div class="price">${p.precio_antes > p.precio ? `<s class="cuotas">${clp(p.precio_antes)}</s> ` : ""}${clp(p.precio)}</div>
+      <div class="cuotas">6 cuotas de ${clp(p.precio / 6)} sin interés</div>
+      <a class="btn" href="${esc(p.ml)}" target="_blank" rel="noopener">Comprar en Mercado Libre</a>
     </div>
-  </article>`;
-}).join("");
+  </article>`).join("");
+});
 document.getElementById("y").textContent = new Date().getFullYear();
 </script>
 </body>
