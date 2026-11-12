@@ -32,21 +32,33 @@ for (let offset = 0; ; offset += 50) {
 // Un producto en catálogo tiene 2 publicaciones (la original y la de catálogo): nos quedamos con la de catálogo.
 const items = [];
 for (let i = 0; i < ids.length; i += 20) {
-  const batch = await get(`/items?ids=${ids.slice(i, i + 20).join(",")}&attributes=id,title,price,original_price,permalink,pictures,catalog_product_id,catalog_listing`, tok.access_token);
+  const batch = await get(`/items?ids=${ids.slice(i, i + 20).join(",")}&attributes=id,title,price,original_price,permalink,pictures,catalog_product_id,catalog_listing,category_id`, tok.access_token);
   for (const { code, body: it } of batch) {
     if (code === 200) items.push(it);
   }
 }
 const enCatalogo = new Set(items.filter(it => it.catalog_listing).map(it => it.catalog_product_id));
-const productos = items
-  .filter(it => it.catalog_listing || !enCatalogo.has(it.catalog_product_id))
-  .map(it => ({
+const visibles = items.filter(it => it.catalog_listing || !enCatalogo.has(it.catalog_product_id));
+
+// Extras para la ficha rápida de la web; si alguno falla, el producto sale igual sin ese dato.
+const categorias = {};
+for (const id of new Set(visibles.map(it => it.category_id).filter(Boolean))) {
+  categorias[id] = await get(`/categories/${id}`, tok.access_token).then(c => c.name, () => "");
+}
+const productos = [];
+for (const it of visibles) {
+  const descripcion = await get(`/items/${it.id}/description`, tok.access_token).then(d => d.plain_text || "", () => "");
+  productos.push({
     nombre: it.title,
     precio: it.price,
     precio_antes: it.original_price,
     img: it.pictures?.[0]?.secure_url || "",
+    fotos: (it.pictures || []).slice(0, 6).map(f => f.secure_url),
+    categoria: categorias[it.category_id] || "",
+    descripcion: descripcion.trim().slice(0, 900),
     ml: it.permalink,
-  }));
+  });
+}
 
 // Preguntas sin responder -> correo privado a ti (no se publican en ningún lado).
 // .preguntas-avisadas guarda solo los números de las preguntas ya avisadas, para no repetir.
