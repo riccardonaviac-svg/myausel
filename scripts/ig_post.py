@@ -6,8 +6,13 @@ SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(SITE, "ig", "c1")
 os.makedirs(OUT, exist_ok=True)
 NAVY, BLUE, SKY, STEEL, YEL = (6, 21, 43), (0, 63, 130), (239, 251, 252), (52, 102, 160), (255, 230, 0)
-F = lambda name, size: ImageFont.truetype(f"C:/Windows/Fonts/{name}", size)
-SERIF, BOLD, REG = "georgiab.ttf", "segoeuib.ttf", "segoeui.ttf"
+# Fuentes libres incluidas en fonts/ para que funcione igual en Windows y Linux.
+def F(name, size):
+    f = ImageFont.truetype(os.path.join(SITE, "fonts", name), size)
+    if name == "Merriweather.ttf":
+        f.set_variation_by_axes([700 if a.get("name") == b"Weight" else a["default"] for a in f.get_variation_axes()])
+    return f
+SERIF, BOLD, REG = "Merriweather.ttf", "Lato-Bold.ttf", "Lato-Regular.ttf"
 W, H = 1080, 1350
 logo_white = Image.open(os.path.join(SITE, "img/logo-dark.png")).convert("RGBA")
 logo_navy = Image.open(os.path.join(SITE, "img/logo.png")).convert("RGB")
