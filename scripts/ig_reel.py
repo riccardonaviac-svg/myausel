@@ -88,17 +88,37 @@ def end_frame(t):
 
 escenas = [(hook_frame, 2.0)] + [((lambda i: lambda t: product_frame(i, t))(i), 2.6) for i in range(len(productos))] + [(end_frame, 3.0)]
 mp4 = os.path.join(OUT, "reel.mp4")
-# Música original generada para este reel (sin derechos de autor); la semilla cambia el tema cada vez.
-wav = os.path.join(OUT, "musica.wav")
 duracion = sum(d for _, d in escenas)
-pista(duracion + .5, wav, semilla=int.from_bytes(os.urandom(2), "big"))
+# Música: si MUSICA_DIR tiene temas descargados (scripts/musica_descargar.py), usa uno real que no haya
+# sonado en los últimos 15 reels, desde un punto al azar. Si no, cae a la pista sintetizada de musica.py.
+MUSICA = os.environ.get("MUSICA_DIR", "")
+audio_in, audio_af, wav = [], "", None
+if MUSICA and os.path.exists(os.path.join(MUSICA, "catalogo.json")):
+    import random
+    catalogo = json.load(open(os.path.join(MUSICA, "catalogo.json"), encoding="utf-8"))
+    ruta_usados = os.path.join(MUSICA, "usados.json")
+    usados = json.load(open(ruta_usados, encoding="utf-8")) if os.path.exists(ruta_usados) else []
+    libres = [f for f in catalogo if f not in usados[-15:] and os.path.exists(os.path.join(MUSICA, f))] or list(catalogo)
+    tema = random.choice(libres)
+    largo = catalogo[tema]["segundos"]
+    inicio = random.uniform(min(8, largo / 4), max(8, largo - duracion - 10))
+    json.dump((usados + [tema])[-50:], open(ruta_usados, "w", encoding="utf-8"), ensure_ascii=False)
+    audio_in = ["-ss", f"{inicio:.1f}", "-i", os.path.join(MUSICA, tema)]
+    audio_af = f"afade=t=in:d=0.4,afade=t=out:st={duracion - 1.5:.2f}:d=1.5"
+    credito = f"Música: {catalogo[tema]['titulo']} - Kevin MacLeod (incompetech.com), licencia CC BY 4.0"
+else:
+    wav = os.path.join(OUT, "musica.wav")
+    pista(duracion + .5, wav, semilla=int.from_bytes(os.urandom(2), "big"))
+    audio_in = ["-i", wav]
+    credito = ""
+open(os.path.join(OUT, "credito.txt"), "w", encoding="utf-8").write(credito)
 ff = shutil.which("ffmpeg")
 if not ff:
     import imageio_ffmpeg
     ff = imageio_ffmpeg.get_ffmpeg_exe()
 proc = subprocess.Popen([ff, "-y", "-loglevel", "error",
     "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-    "-i", wav, "-shortest", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "high", "-preset", "medium", "-crf", "20",
+    *audio_in, *(["-af", audio_af] if audio_af else []), "-map", "0:v", "-map", "1:a", "-shortest", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-profile:v", "high", "-preset", "medium", "-crf", "20",
     "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", mp4], stdin=subprocess.PIPE)
 for escena, dur in escenas:
     n = int(dur * FPS)
@@ -107,5 +127,5 @@ for escena, dur in escenas:
 proc.stdin.close(); proc.wait()
 end_frame(1).save(os.path.join(OUT, "portada.jpg"), quality=92)
 product_frame(0, .6).convert("RGB").save(os.path.join(OUT, "preview.jpg"), quality=85)
-os.remove(wav)
-print("ok", mp4, round(os.path.getsize(mp4) / 1e6, 1), "MB")
+if wav: os.remove(wav)
+print("ok", credito or "música sintetizada", mp4, round(os.path.getsize(mp4) / 1e6, 1), "MB")
