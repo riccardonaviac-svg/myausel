@@ -92,12 +92,12 @@ def main():
             foto = fetch(url)
             prod = recorte(foto)
             if prod is not None:  # foto de producto sobre blanco: 2 de estudio + detalle
-                variantes = [estudio(prod, FONDOS[i % 4]), estudio(prod, FONDOS[(i + 1) % 4], escala=.5, giro=-8), acercamiento(foto)]
+                variantes = [("e", estudio(prod, FONDOS[i % 4])), ("e", estudio(prod, FONDOS[(i + 1) % 4], escala=.5, giro=-8)), ("d", acercamiento(foto))]
             else:  # foto ambientada: se usa completa (el producto puede no estar al centro)
-                variantes = [ImageOps.fit(foto, (W, H), Image.LANCZOS)]
-            for v in variantes:
+                variantes = [("a", ImageOps.fit(foto, (W, H), Image.LANCZOS))]
+            for tipo, v in variantes:  # e = estudio, d = detalle, a = ambientada
                 n += 1
-                ruta = os.path.join(carpeta, f"{n}.jpg")
+                ruta = os.path.join(carpeta, f"{tipo}{n}.jpg")
                 v.save(ruta, quality=90)
                 rutas.append(os.path.relpath(ruta, SITE).replace(os.sep, "/"))
         indice[p["nombre"]] = rutas
