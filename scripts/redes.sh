@@ -7,4 +7,4 @@ date
 claude -p "$(cat automatizacion/redes-prompt.md)" \
   --model opus \
   --permission-mode dontAsk \
-  --allowedTools "Bash(git *)" "Bash(gh *)" "Bash(python *)" "Bash(python3 *)" "Bash(curl *)" "Bash(ls *)" "Read" "Write" "Edit" "Glob" "Grep" "mcp__claude_ai_Composio"
+  --allowedTools "Bash" "Read" "Write" "Edit" "Glob" "Grep" "mcp__claude_ai_Composio"
